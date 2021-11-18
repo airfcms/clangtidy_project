@@ -1,6 +1,12 @@
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required(VERSION 3.8)
 
-project (clangtidy_project) 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-set(CMAKE_CXX_CLANG_TIDY clang-tidy -checks=-*, hicpp-signed-*)
-add_executable (clangtidy_project ${CMAKE_CURRENT_SOURCE_DIR}/src/module1.cc)
+project(clang-tidy)
+
+enable_testing()
+
+file (GLOB SRC_LIST src/module1.cc)
+
+add_library(${PROJECT_NAME} STATIC ${SRC_LIST})
+add_test(NAME cland-tidy-report COMMAND sh -c "clang-tidy ${SRC_LIST} -checks=* -p ${CMAKE_BINARY_DIR}/compile_commands.json | tee clang-tidy-report.txt")
